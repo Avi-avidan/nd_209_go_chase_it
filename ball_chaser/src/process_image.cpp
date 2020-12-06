@@ -34,7 +34,7 @@ void process_image_callback(const sensor_msgs::Image img)
     float ball_position = -1.0;
 
     // Loop through each pixel in the image and check if its equal to the first one
-    for (int i = 0; i < img.height*img.step-2; i++) {
+    for (int i = 0; i < img.height*img.step-2; i += 3) {
         if ((img.data[i] == 255) && (img.data[i+1] == 255) && (img.data[i+2] == 255)){
             ball_index = i%img.step;
             ball_position = float(ball_index)/float(img.step);
