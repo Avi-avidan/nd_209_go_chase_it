@@ -34,14 +34,15 @@ void process_image_callback(const sensor_msgs::Image img)
     float ball_position = -1.0;
 
     // Loop through each pixel in the image and check if its equal to the first one
-    for (int i = 0; i < img.height * img.step; i++) {
-        if (img.data[i] == 255) {
+    for (int i = 0; i < img.height*img.step-2; i++) {
+        if ((img.data[i] == 255) && (img.data[i+1] == 255) && (img.data[i+2] == 255)){
             ball_index = i%img.step;
             ball_position = float(ball_index)/float(img.step);
             break;
         }
     }
     
+    //ROS_INFO("img height, width, step (%1.1f, %1.1f, %1.1f)", float(img.height), float(img.width), float(img.step));
     ROS_INFO("white ball identified at index (%1.3f) of image width", float(ball_index));
     //ROS_INFO_STREAM("calc ball pos ; img hight, width, pos: (%1.1f, %1.1f, %1.3f)", float(img.height), float(img.step), ball_position);
 
@@ -50,14 +51,14 @@ void process_image_callback(const sensor_msgs::Image img)
         req_ang_z = 0.0;
     } else {
         ROS_INFO("white ball identified at (%1.3f) of image width", ball_position);
-        if ((ball_position > 0.425) && (ball_position < 0.575)) {
-            req_lin_x = 0.9;
+        if ((ball_position > 0.4) && (ball_position < 0.6)) {
+            req_lin_x = 0.8;
             req_ang_z = 0.0;
-        } else if (ball_position <= 0.425) {
-            req_lin_x = 0.4;
+        } else if (ball_position <= 0.4) {
+            req_lin_x = 0.05;
             req_ang_z = 0.1;
-        } else if (ball_position >= 0.575) {
-            req_lin_x = 0.4;
+        } else if (ball_position >= 0.6) {
+            req_lin_x = 0.05;
             req_ang_z = -0.1;
         }
     }
